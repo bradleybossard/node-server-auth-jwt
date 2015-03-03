@@ -1,0 +1,25 @@
+{
+  "name": "node-server-auth-jwt",
+  "version": "1.0.0",
+  "description": "Example of getting JWT auth working with Angular",
+  "main": "server.js",
+  "dependencies": {
+    "faker": "^2.1.2",
+    "express": "^4.12.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bradleybossard/node-server-auth-jwt.git"
+  },
+  "author": "bradleybossard@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bradleybossard/node-server-auth-jwt/issues"
+  },
+  "homepage": "https://github.com/bradleybossard/node-server-auth-jwt"
+}
