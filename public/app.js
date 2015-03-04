@@ -7,9 +7,13 @@ var app = angular.module('app', [], function config($httpProvider) {
 
 app.constant('API_URL', 'http://localhost:3000');
 
-app.controller('MainCtrl', function($http,RandomUserFactory, UserFactory) {
+app.controller('MainCtrl', function($http, RandomUserFactory, UserFactory) {
 
   var vm = this;
+
+  UserFactory.getUser().then(function success(response) {
+    vm.user = response.data;
+  });
 
   vm.getRandomUser = function() {
     RandomUserFactory.getUser().then(function success(response) {
@@ -20,7 +24,6 @@ app.controller('MainCtrl', function($http,RandomUserFactory, UserFactory) {
   vm.login = function(username, password) {
     UserFactory.login(username, password).then(function success(response) {
       vm.user = response.data.user;
-      console.log(response.data.token);
     },
     function errror(response) {
       alert('Error: ' + response.data);
@@ -31,6 +34,7 @@ app.controller('MainCtrl', function($http,RandomUserFactory, UserFactory) {
     UserFactory.logout();
     vm.user = null;
   };
+
 
 });
 
@@ -45,10 +49,11 @@ app.factory('RandomUserFactory', ['$http', 'API_URL', function RandomUserFactory
 
 }]);
 
-app.factory('UserFactory', function UserFactory($http, API_URL, AuthTokenFactory) {
+app.factory('UserFactory', function UserFactory($http, API_URL, AuthTokenFactory, $q) {
   return {
     login: login,
-    logout: logout
+    logout: logout,
+    getUser: getUser
   };
 
   function login(username, password) {
@@ -63,6 +68,14 @@ app.factory('UserFactory', function UserFactory($http, API_URL, AuthTokenFactory
 
   function logout() {
       AuthTokenFactory.setToken();
+  }
+
+  function getUser() {
+    if (AuthTokenFactory.getToken()) {
+      return $http.get(API_URL + '/me');
+    } else {
+      return $q.reject({ data: 'client has no auth token'});
+    }
   }
 });
 
