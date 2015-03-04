@@ -2,6 +2,7 @@
 'use strict';
 
 var app = angular.module('app', [], function config($httpProvider) {
+  // Added the JWT tokens to any requests made by $http.
   $httpProvider.interceptors.push('AuthInterceptor');
 });
 
@@ -38,6 +39,7 @@ app.controller('MainCtrl', function($http, RandomUserFactory, UserFactory) {
 
 });
 
+// Gets random user data.
 app.factory('RandomUserFactory', ['$http', 'API_URL', function RandomUserFactory($http, API_URL) {
   return {
     getUser: getUser
@@ -46,9 +48,9 @@ app.factory('RandomUserFactory', ['$http', 'API_URL', function RandomUserFactory
   function getUser() {
     return $http.get(API_URL + '/random-user');
   }
-
 }]);
 
+// Handles logging user in/out and storing their token.
 app.factory('UserFactory', function UserFactory($http, API_URL, AuthTokenFactory, $q) {
   return {
     login: login,
@@ -79,7 +81,7 @@ app.factory('UserFactory', function UserFactory($http, API_URL, AuthTokenFactory
   }
 });
 
-
+// Stores and gets the token.
 app.factory('AuthTokenFactory', function AuthTokenFactory($window) {
   'use strict';
   var store = $window.localStorage;
@@ -103,7 +105,7 @@ app.factory('AuthTokenFactory', function AuthTokenFactory($window) {
   }
 });
 
-
+// Incercepts http requests and adds the JWT to the header.
 app.factory('AuthInterceptor', function AuthInterceptor(AuthTokenFactory) {
   'use strict';
   return {
@@ -118,8 +120,6 @@ app.factory('AuthInterceptor', function AuthInterceptor(AuthTokenFactory) {
     }
     return config;
   }
-
 });
-
 
 })();
